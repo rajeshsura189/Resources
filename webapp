@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('clone') {
+            steps {
+                echo 'clone Github'
+				git branch: 'main', url: 'https://github.com/DevSecOpsEasy/Resources.git'
+            }
+        }
+		stage('Build') {
+            steps {
+                echo 'Build Stage'
+				sh 'mvn clean install'
+            }
+        }
+		stage('Deploy') {
+            steps {
+                echo 'Deploy code'
+				deploy adapters: [tomcat9(credentialsId: '2846965b-f53b-4ff6-8141-85f66ffebb35', path: '', url: 'http://34.201.77.19:8081')], contextPath: null, war: '**/*.war'
+            }
+        }
+	
+    }
+}
